@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Solitaire</title>
+  </head>
+  <body style="background-image: url(solitaireback.webp);background-repeat: no-repeat;background-size: cover;">
+    <style>
+      .final_stacks{
+        display:inline-flex;
+        position:fixed;
+        align-items: center;
+        left: 918px;
+        top: 145px;
+      }
+      .final_stacks div{
+        padding-left: 21px;
+        padding-right: 21px;
+      }
+      img{
+        width:60px;
+        height:80px;
+      }
+      .final_stacks img{
+        border-radius: 10px;
+        border: 4px solid;
+      }
+      .stockpile{
+        position: fixed;
+        left:630px;
+        top:150px
+      }
+      #stockpilebutton{
+        position: fixed;
+        left:630px;
+        top:150px;
+        width:60px;
+        height:80px;
+      }
+      button:hover {
+        cursor: pointer;
+      }
+      #wastepile{
+        position: fixed;
+        top:150px;
+        left:720px;
+      }
+      #wastepilediv{
+        position: fixed;
+        top:150px;
+        left:720px;
+      }
+      #pile1{
+        position:fixed;
+        top:300px;
+        left:630px;
+      }
+      #pile1 img{
+        display:block;
+        margin-bottom: -60px;
+      }
+      #pile2 img{
+        display:block;
+        margin-bottom: -60px;
+      }
+      #pile3 img{
+        display:block;
+        margin-bottom: -60px;      
+      }
+      #pile4 img{
+        display:block;
+        margin-bottom: -60px;
+      }
+      #pile5 img{
+        display:block;
+        margin-bottom: -60px;
+      }
+      #pile6 img{
+        display:block;
+        margin-bottom: -60px;
+      }
+      #pile7 img{
+        display:block;
+        margin-bottom: -60px;
+      }
+      #pile2{
+        position:fixed;
+        top:300px;
+        left:720px;
+      }
+      #pile3{
+        position:fixed;
+        top:300px;
+        left:830px;
+      }
+      #pile4{
+        position:fixed;
+        top:300px;
+        left:940px;
+      }
+      #pile5{
+        position:fixed;
+        top:300px;
+        left:1050px;
+      }
+      #pile6{
+        position:fixed;
+        top:300px;
+        left:1160px;
+      }
+      #pile7{
+        position:fixed;
+        top:300px;
+        left:1270px;
+      }
+    </style>
+
+    <div class = "final_stacks">
+      <div id = "clubs_stack">
+        <img id = "clubs_stackimg"ondrop = "drop(event)" ondragover= "dragoverHandler(event)" src = "clubsicon.jpg">
+      </div>
+      <div id = "diamonds_stack">
+        <img id = "diamonds_stackimg"ondrop = "drop(event)" ondragover= "dragoverHandler(event)"src = "diamondsicon.jpg">
+      </div>
+      <div id = "spades_stack">
+        <img id = "spades_stackimg"ondrop = "drop(event)" ondragover= "dragoverHandler(event)"src = "spadesicon.jpg">
+      </div>
+      <div id = "hearts_stack">
+        <img id = "hearts_stackimg"ondrop = "drop(event)" ondragover= "dragoverHandler(event)"src = "heartsicon.jpg">
+      </div>
+    </div>
+    <button id = "stockpilebutton">
+      <img class = "stockpile" draggable = "false"src ="PNG-cards-1.3/backofcard.png">
+    </button>
+    
+
+    </map>
+    <div id = "wastepilediv">
+      <img id = "wastepile">
+    </div>
+    
+
+    <div class ="piles">
+      <!--work on this and rendering in the piles with js (probably will start with ks and how it modifies what is in the div)-->
+      <div id = "pile1">
+
+      </div>
+      <div id = "pile2">
+    
+      </div>
+      <div id = "pile3">
+
+      </div>
+      <div id = "pile4">
+
+      </div>
+      <div id = "pile5">
+
+      </div>
+      <div id = "pile6">
+
+      </div>
+      <div id = "pile7">
+        
+      </div>
+    </div>
+    
+
+
+    <script src = "solitare.js"></script>
+  </body>
+</html>
