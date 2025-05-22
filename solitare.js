@@ -3,6 +3,8 @@ function Card(suit, img, color, value){
   this.img = img;
   this.color = color;
   this.value = value;
+  this.pile= undefined;
+  this.face = undefined;
 }
 
 
@@ -106,12 +108,14 @@ function dealdeck(){
 
   for (let y = 0; y<piles.length;y++){
     for (let x = 0;x<pilesize;x++){
+      deckofcards[index].pile = pilesize;
       piles[y].push(deckofcards[index]);
       index++;
     }
     pilesize++;
   }
   for (let x = index;x<deckofcards.length;x++){
+    deckofcards[x].pile = "stock";
     stockpile.push(deckofcards[x]);
   }
 }
@@ -125,12 +129,22 @@ function rendercardstart(){
     //render in top card
     id = "pile" + num;
     pileelement = document.getElementById(id);
-    piletopimg = piles[num-1][0].img;
-    pileelement.innerHTML = '<img id = "topcard" draggable = "true" ondragstart = "drag(event)" src ="'+piletopimg+'">';
-    
-    //render in facedown cards
-    for(let y = 0;y<piles[num-1].length-1;y++){
-      pileelement.innerHTML = '<img class = "bottomcard" draggable = "false" src = "./PNG-cards-1.3/backofcard.png">'+ pileelement.innerHTML;
+    if (piles[num-1].length != 0){
+      piletopimg = piles[num-1][0].img;
+      pileelement.innerHTML = '<img id = "topcard" draggable = "true" ondragstart = "drag(event)" src ="'+piletopimg+'">';
+      
+      //render in facedown cards
+      for(let y = 1;y<piles[num-1].length;y++){
+        if(piles[num-1][y].face != "up"){
+          pileelement.innerHTML = '<img class = "bottomcard" draggable = "false" src = "./PNG-cards-1.3/backofcard.png">'+ pileelement.innerHTML;
+        }
+        else{
+          pileelement.innerHTML = '<img class = "bottomcard" draggable = "true" ondragstart = "dragstack(event)" src = "'+ piles[num-1][y].img+'">'+ pileelement.innerHTML;
+        }
+      }
+    }
+    else{
+      pileelement.innerHTML = '<img id = "topcard">'
     }
     num++;
   }
@@ -168,7 +182,7 @@ function rendercardstart(){
 
 //functions that take care of drop
 function canStack(card1, card2){
-  if(card1.color != card2.color && card2.val == card1.val-1){
+  if(card1.color != card2.color && card2.value == card1.value+1){
     return true;
   }
   return false;
@@ -248,7 +262,6 @@ function dragoverHandler(even){
 
 function drag(even){
   even.dataTransfer.setData("img", even.target.src);
-  console.log("this is the event target: "+ even.target);
 }
 
 function drop(even){
@@ -260,7 +273,10 @@ function drop(even){
   let card1 = imgtocard(fetchData);
 
   let test1= card1.img.substring(card1.img.indexOf("0/")+2,card1.img.length);
-  console.log(" this is test 1: "+test1);
+  test1 = "./" + test1;
+  let tempcard = card1;
+  tempcard.img = test1;
+  console.log(" this is tempcard: "+tempcard);
 
   let stacksuit;
   if(element.src.indexOf("icon")!=-1){
@@ -276,20 +292,151 @@ function drop(even){
     console.log("this is element.src"+element.src);
     if (stacksuit == "diamonds"){
       foundationdiamonds.push(card1);
+      for (let i =0;i<deckofcards.length;i++){
+        if (deckofcards[i].img==test1){
+          tempcard.pile=deckofcards[i].pile;
+          break;
+        }
+      }
+      if(tempcard.pile=="stock"){  
+        wastepile.splice(wastepile.length-1,1);
+      }
+      else{
+        piles[tempcard.pile-1].splice(0,1);
+      }
     }
     else if (stacksuit == "spades"){
       foundationspades.push(card1);
+      for (let i =0;i<deckofcards.length;i++){
+        if (deckofcards[i].img==test1){
+          tempcard.pile=deckofcards[i].pile;
+          break;
+        }
+      }
+      if(tempcard.pile=="stock"){  
+        wastepile.splice(wastepile.length-1,1);
+      }
+      else{
+        piles[tempcard.pile-1].splice(0,1);
+      }
     }
     else if (stacksuit == "clubs"){
       foundationclubs.push(card1);
+      for (let i =0;i<deckofcards.length;i++){
+        if (deckofcards[i].img==test1){
+          tempcard.pile=deckofcards[i].pile;
+          break;
+        }
+      }
+      if(tempcard.pile=="stock"){  
+        wastepile.splice(wastepile.length-1,1);
+      }
+      else{
+        piles[tempcard.pile-1].splice(0,1);
+      }
     }
     else{
       foundationhearts.push(card1);
+      for (let i =0;i<deckofcards.length;i++){
+        if (deckofcards[i].img==test1){
+          tempcard.pile=deckofcards[i].pile;
+          break;
+        }
+      }
+      if(tempcard.pile=="stock"){  
+        wastepile.splice(wastepile.length-1,1);
+      }
+      else{
+        piles[tempcard.pile-1].splice(0,1);
+      }
     }
-    //find index of card in pile and 
-    //add code here to add to remove from necessary piles and make cards disapper from those piles
+    if(tempcard.pile == "stock"){
+      if(wastepile.length>0){
+        let wastecar = wastepile[wastepile.length-1];
+        document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste" draggable = "true" ondragstart = "drag(event)" src="' + wastecar.img + '">';
+      }
+      else{
+        document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste">';
+      }
+    }
+    else{
+      rendercardstart();
+    }
   }
-  
 }
-//make a seperate drop function for the stackablecards
-//add pile and face up/down attributes to cards
+function dropstack(even, pilenum){
+  even.preventDefault();
+  const fetchData = even.dataTransfer.getData("img");
+  if(Array.isArray(fetchData)){
+    console.log("yo");
+  }
+  let topcard = imgtocard(fetchData);
+  let bottomcard = imgtocard(even.target.src);
+  let originalpile;
+  for (let i =0;i<deckofcards.length;i++){
+      if (deckofcards[i].suit==topcard.suit && deckofcards[i].value==topcard.value){
+        originalpile = deckofcards[i].pile;
+        break;
+      }
+  }
+  bottomcard.pile = pilenum;
+  
+  if (canStack(topcard,bottomcard)){
+    
+    topcard.pile = pilenum;
+    for (let i =0;i<deckofcards.length;i++){
+      if (deckofcards[i].suit==topcard.suit && deckofcards[i].value==topcard.value){
+        deckofcards[i].pile = pilenum;
+        break;
+      }
+    }
+    console.log(bottomcard);
+    piles[pilenum-1][0].face = "up";
+    console.log(topcard.pile);
+    piles[pilenum-1].unshift(topcard);
+    if (originalpile == "stock"){
+      wastepile.pop();
+      if(wastepile.length>0){
+        document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste" draggable = "true" ondragstart = "drag(event)" src="' + wastepile[wastepile.length-1].img + '">';
+      }
+      else{
+        document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste">';
+      }
+    }
+    else{
+      piles[originalpile-1].shift();
+    }
+    console.log("originalpile: "+ originalpile);
+    rendercardstart();
+  }
+}
+
+function dragstack(even){
+  topofstack = imgtocard(even.target.src);
+  topofstack.face = "up";
+  for (let i =0;i<deckofcards.length;i++){
+    if (deckofcards[i].suit==topofstack.suit && deckofcards[i].value==topofstack.value){
+      topofstack.pile = deckofcards[i].pile;
+      break;
+    }
+  }
+  let indexoftopofstack;
+  for (let i = 0;i<piles[topofstack.pile-1].length;i++){
+    if (piles[topofstack.pile-1][i].suit == topofstack.suit && piles[topofstack.pile-1][i].value == topofstack.value){
+      indexoftopofstack = i;
+      break;
+    }
+  }
+  let cardstack = [];
+  for(let i = 0;i<=indexoftopofstack;i++){
+    cardstack.push(piles[topofstack.pile-1][i]);
+  }
+  even.dataTransfer.setData("img", cardstack);
+  console.log(cardstack);
+}
+
+
+//make it so that you can move flipped stacks (do this by getting all cards with the face: "up" attribute)
+//add conditions to win game and make sure that kings can create new stacks (do kings new stacks by modifying can stack function)
+//fix dragging first card from waste into a pile
+//after this make functions that simplify and optimize code and then use css to make it look better
