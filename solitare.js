@@ -144,7 +144,7 @@ function rendercardstart(){
       }
     }
     else{
-      pileelement.innerHTML = '<img id = "topcard">'
+      pileelement.innerHTML = '<img id = "nullpile">'
     }
     num++;
   }
@@ -371,30 +371,62 @@ function dropstack(even, pilenum){
   even.preventDefault();
   const fetchData = even.dataTransfer.getData("img");
   const fetchData2 = even.dataTransfer.getData("text");
+  let isnull = false;
+  console.log("this is eventarid: "+ even.target.id);
+  if (even.target.id == "nullpile"){
+    isnull = true;
+  }
+  let isnullandking= false;
   
   if(isNumber(Number(fetchData2[0]))){
     let topstackindex = Number(fetchData2.substring(0,fetchData2.indexOf(" ")));
     let originalpile = Number(fetchData2.substring(fetchData2.indexOf(" ")+1,fetchData2.length));
-    
-    if (canStack(piles[originalpile-1][topstackindex],piles[pilenum-1][0])){
-      for (let i =0;i<deckofcards.length;i++){
-          if (deckofcards[i].suit==piles[originalpile-1][topstackindex].suit && deckofcards[i].value==piles[originalpile-1][topstackindex].value){
-            deckofcards[i].pile = pilenum;
+    if (piles[originalpile-1][topstackindex].value == 13 && isnull){
+      isnullandking = true;
+      console.log("nullandkingtrue");
+    }
+    if (isnullandking){
+      
+      piles[pilenum-1][0].face = "up";
+      for (let i =topstackindex;i>=0;i--){
+        for (let z =0;i<deckofcards.length;z++){
+          if (deckofcards[z].suit==piles[originalpile-1][i].suit && deckofcards[z].value==piles[originalpile-1][i].value){
+            deckofcards[z].pile = pilenum;
             break;
           }
-      }
-      piles[pilenum-1][0].face = "up";
-      
-      for (let i =topstackindex;i>=0;i--){
+        }
+        
         piles[originalpile-1][i].pile = pilenum;
+        piles[originalpile-1][i].face = "up";
+        piles[pilenum-1].unshift(piles[originalpile-1][i]);
+        piles[originalpile-1].splice(i,1);
+      }
+      console.log("topstackindex: "+topstackindex+" pilenumber: "+originalpile);
+      rendercardstart();
+
+    }
+    else if (canStack(piles[originalpile-1][topstackindex],piles[pilenum-1][0])){
+      
+      piles[pilenum-1][0].face = "up";
+      for (let i =topstackindex;i>=0;i--){
+        for (let z =0;i<deckofcards.length;z++){
+          if (deckofcards[z].suit==piles[originalpile-1][i].suit && deckofcards[z].value==piles[originalpile-1][i].value){
+            deckofcards[z].pile = pilenum;
+            break;
+          }
+        }
+        
+        piles[originalpile-1][i].pile = pilenum;
+        piles[originalpile-1][i].face = "up";
         piles[pilenum-1].unshift(piles[originalpile-1][i]);
         piles[originalpile-1].splice(i,1);
       }
       console.log("topstackindex: "+topstackindex+" pilenumber: "+originalpile);
       rendercardstart();
     }
+    
   }
-
+  
   else{
     //topcard is the one being added to the stack
     let topcard = imgtocard(fetchData);
@@ -407,8 +439,13 @@ function dropstack(even, pilenum){
         }
     }
     bottomcard.pile = pilenum;
+    console.log("topcard.suit: " + topcard.suit);
+    if (topcard.value == 13 && isnull){
+      isnullandking = true;
+      console.log("nullandkingtrue");
+    }
     
-    if (canStack(topcard,bottomcard)){
+    if (canStack(topcard,bottomcard) || isnullandking){
       
       topcard.pile = pilenum;
       for (let i =0;i<deckofcards.length;i++){
@@ -417,8 +454,9 @@ function dropstack(even, pilenum){
           break;
         }
       }
-      console.log(bottomcard);
-      piles[pilenum-1][0].face = "up";
+      if(!isnullandking){
+        piles[pilenum-1][0].face = "up";
+      }
       console.log(topcard.pile);
       piles[pilenum-1].unshift(topcard);
       if (originalpile == "stock"){
@@ -436,6 +474,7 @@ function dropstack(even, pilenum){
       console.log("originalpile: "+ originalpile);
       rendercardstart();
     }
+    
   }
 }
 
@@ -463,8 +502,7 @@ function dragstack(even){
   even.dataTransfer.setData("text", cardstackstr);
   console.log(cardstackstr);
 }
-
-
-//add conditions to win game and make sure that kings can create new stacks (do kings new stacks by modifying can stack function)
+//make sure that a stack where the top card is a king can be dragged to empty pile
+//everything else works just add thing to end game and say you won when game is over (probably look at images within the deposit piles to determine this)
 
 //after this make functions that simplify and optimize code and then use css to make it look better
