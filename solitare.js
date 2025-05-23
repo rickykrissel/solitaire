@@ -364,50 +364,78 @@ function drop(even){
     }
   }
 }
+function isNumber(value) {
+  return typeof value === 'number' && !isNaN(value);
+}
 function dropstack(even, pilenum){
   even.preventDefault();
   const fetchData = even.dataTransfer.getData("img");
-  if(Array.isArray(fetchData)){
-    console.log("yo");
-  }
-  let topcard = imgtocard(fetchData);
-  let bottomcard = imgtocard(even.target.src);
-  let originalpile;
-  for (let i =0;i<deckofcards.length;i++){
-      if (deckofcards[i].suit==topcard.suit && deckofcards[i].value==topcard.value){
-        originalpile = deckofcards[i].pile;
-        break;
-      }
-  }
-  bottomcard.pile = pilenum;
+  const fetchData2 = even.dataTransfer.getData("text");
   
-  if (canStack(topcard,bottomcard)){
+  if(isNumber(Number(fetchData2[0]))){
+    let topstackindex = Number(fetchData2.substring(0,fetchData2.indexOf(" ")));
+    let originalpile = Number(fetchData2.substring(fetchData2.indexOf(" ")+1,fetchData2.length));
     
-    topcard.pile = pilenum;
-    for (let i =0;i<deckofcards.length;i++){
-      if (deckofcards[i].suit==topcard.suit && deckofcards[i].value==topcard.value){
-        deckofcards[i].pile = pilenum;
-        break;
+    if (canStack(piles[originalpile-1][topstackindex],piles[pilenum-1][0])){
+      for (let i =0;i<deckofcards.length;i++){
+          if (deckofcards[i].suit==piles[originalpile-1][topstackindex].suit && deckofcards[i].value==piles[originalpile-1][topstackindex].value){
+            deckofcards[i].pile = pilenum;
+            break;
+          }
       }
+      piles[pilenum-1][0].face = "up";
+      
+      for (let i =topstackindex;i>=0;i--){
+        piles[originalpile-1][i].pile = pilenum;
+        piles[pilenum-1].unshift(piles[originalpile-1][i]);
+        piles[originalpile-1].splice(i,1);
+      }
+      console.log("topstackindex: "+topstackindex+" pilenumber: "+originalpile);
+      rendercardstart();
     }
-    console.log(bottomcard);
-    piles[pilenum-1][0].face = "up";
-    console.log(topcard.pile);
-    piles[pilenum-1].unshift(topcard);
-    if (originalpile == "stock"){
-      wastepile.pop();
-      if(wastepile.length>0){
-        document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste" draggable = "true" ondragstart = "drag(event)" src="' + wastepile[wastepile.length-1].img + '">';
+  }
+
+  else{
+    //topcard is the one being added to the stack
+    let topcard = imgtocard(fetchData);
+    let bottomcard = imgtocard(even.target.src);
+    let originalpile;
+    for (let i =0;i<deckofcards.length;i++){
+        if (deckofcards[i].suit==topcard.suit && deckofcards[i].value==topcard.value){
+          originalpile = deckofcards[i].pile;
+          break;
+        }
+    }
+    bottomcard.pile = pilenum;
+    
+    if (canStack(topcard,bottomcard)){
+      
+      topcard.pile = pilenum;
+      for (let i =0;i<deckofcards.length;i++){
+        if (deckofcards[i].suit==topcard.suit && deckofcards[i].value==topcard.value){
+          deckofcards[i].pile = pilenum;
+          break;
+        }
+      }
+      console.log(bottomcard);
+      piles[pilenum-1][0].face = "up";
+      console.log(topcard.pile);
+      piles[pilenum-1].unshift(topcard);
+      if (originalpile == "stock"){
+        wastepile.pop();
+        if(wastepile.length>0){
+          document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste" draggable = "true" ondragstart = "drag(event)" src="' + wastepile[wastepile.length-1].img + '">';
+        }
+        else{
+          document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste">';
+        }
       }
       else{
-        document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste">';
+        piles[originalpile-1].shift();
       }
+      console.log("originalpile: "+ originalpile);
+      rendercardstart();
     }
-    else{
-      piles[originalpile-1].shift();
-    }
-    console.log("originalpile: "+ originalpile);
-    rendercardstart();
   }
 }
 
@@ -431,12 +459,12 @@ function dragstack(even){
   for(let i = 0;i<=indexoftopofstack;i++){
     cardstack.push(piles[topofstack.pile-1][i]);
   }
-  even.dataTransfer.setData("img", cardstack);
-  console.log(cardstack);
+  let cardstackstr = "" + indexoftopofstack+" "+topofstack.pile;
+  even.dataTransfer.setData("text", cardstackstr);
+  console.log(cardstackstr);
 }
 
 
-//make it so that you can move flipped stacks (do this by getting all cards with the face: "up" attribute)
 //add conditions to win game and make sure that kings can create new stacks (do kings new stacks by modifying can stack function)
-//fix dragging first card from waste into a pile
+
 //after this make functions that simplify and optimize code and then use css to make it look better
