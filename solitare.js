@@ -148,6 +148,11 @@ function rendercardstart(){
     }
     num++;
   }
+  if (foundationdiamonds.length > 0 && foundationspades.length > 0 && foundationclubs.length > 0 && foundationhearts.length > 0){
+    if (foundationdiamonds[foundationdiamonds.length-1].value == 13 && foundationhearts[foundationhearts.length-1].value == 13 && foundationclubs[foundationclubs.length-1].value == 13 && foundationspades[foundationspades.length-1].value == 13){
+      console.log("You win");
+    }
+  }
 }
   function flipstock(){
     
@@ -387,7 +392,6 @@ function dropstack(even, pilenum){
     }
     if (isnullandking){
       
-      piles[pilenum-1][0].face = "up";
       for (let i =topstackindex;i>=0;i--){
         for (let z =0;i<deckofcards.length;z++){
           if (deckofcards[z].suit==piles[originalpile-1][i].suit && deckofcards[z].value==piles[originalpile-1][i].value){
@@ -502,7 +506,7 @@ function dragstack(even){
   even.dataTransfer.setData("text", cardstackstr);
   console.log(cardstackstr);
 }
-//make sure that a stack where the top card is a king can be dragged to empty pile
-//everything else works just add thing to end game and say you won when game is over (probably look at images within the deposit piles to determine this)
+
+//modify game ending to display a message across the screen
 
 //after this make functions that simplify and optimize code and then use css to make it look better
