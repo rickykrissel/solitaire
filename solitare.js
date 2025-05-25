@@ -150,7 +150,12 @@ function rendercardstart(){
   }
   if (foundationdiamonds.length > 0 && foundationspades.length > 0 && foundationclubs.length > 0 && foundationhearts.length > 0){
     if (foundationdiamonds[foundationdiamonds.length-1].value == 13 && foundationhearts[foundationhearts.length-1].value == 13 && foundationclubs[foundationclubs.length-1].value == 13 && foundationspades[foundationspades.length-1].value == 13){
-      console.log("You win");
+      //<div id = "winmessage">You Win!</div>
+      const newElement = document.createElement('div');
+      newElement.setAttribute("id","winmessage");
+      newElement.textContent = 'You Win!';
+      const parentElement = document.getElementById("bodyid");
+      parentElement.appendChild(newElement);
     }
   }
 }
@@ -176,7 +181,7 @@ function rendercardstart(){
         document.getElementById("wastepilediv").innerHTML = '<img class = "topwaste">';
       }
       else{
-        document.getElementById("stockpilebutton").innerHTML = 'pile is empty';
+        document.getElementById("stockpilebutton").innerHTML = 'Pile is Empty';
       }
     }
     
@@ -507,6 +512,4 @@ function dragstack(even){
   console.log(cardstackstr);
 }
 
-//modify game ending to display a message across the screen
 
-//after this make functions that simplify and optimize code and then use css to make it look better

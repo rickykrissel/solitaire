@@ -3,7 +3,7 @@
   <head>
     <title>Solitaire</title>
   </head>
-  <body style="background-image: url(solitaireback.webp);background-repeat: no-repeat;background-size: cover;">
+  <body id ="bodyid"style="background-image: url(solitaireback.webp);background-repeat: no-repeat;background-size: cover;">
     <style>
       .final_stacks{
         display:inline-flex;
@@ -112,6 +112,20 @@
         top:300px;
         left:1270px;
       }
+      #winmessage{
+        position:absolute;
+        left: 30%;
+        top: 40%;
+        width:40%;
+        border: 3px solid #ffffff;
+        border-radius: 10px;
+        padding:20px;
+        background-color: green;
+        text-align: center;
+        color:white;
+        font-family: "Lucida Console", "Courier New", monospace;
+        font-weight: bold;
+      }
     </style>
 
     <div class = "final_stacks">
@@ -140,29 +154,30 @@
     
 
     <div class ="piles">
-      <!--work on this and rendering in the piles with js (probably will start with ks and how it modifies what is in the div)-->
-      <div id = "pile1">
+      
+      <div id = "pile1" ondrop = "dropstack(event, 1)" ondragover= "dragoverHandler(event)">
 
       </div>
-      <div id = "pile2">
+      <div id = "pile2" ondrop = "dropstack(event, 2)" ondragover= "dragoverHandler(event)">
     
       </div>
-      <div id = "pile3">
+      <div id = "pile3" ondrop = "dropstack(event, 3)" ondragover= "dragoverHandler(event)">
 
       </div>
-      <div id = "pile4">
+      <div id = "pile4" ondrop = "dropstack(event, 4)" ondragover= "dragoverHandler(event)">
 
       </div>
-      <div id = "pile5">
+      <div id = "pile5" ondrop = "dropstack(event, 5)" ondragover= "dragoverHandler(event)">
 
       </div>
-      <div id = "pile6">
+      <div id = "pile6" ondrop = "dropstack(event, 6)" ondragover= "dragoverHandler(event)">
 
       </div>
-      <div id = "pile7">
+      <div id = "pile7" ondrop = "dropstack(event, 7)" ondragover= "dragoverHandler(event)">
         
       </div>
     </div>
+    
     
 
 
