@@ -282,7 +282,8 @@ function drop(even){
   console.log(element);
   let card1 = imgtocard(fetchData);
 
-  let test1= card1.img.substring(card1.img.indexOf("0/")+2,card1.img.length);
+  let test1= card1.img.substring(card1.img.indexOf("/P")+1,card1.img.length);
+  console.log('this is card1.img: ' + card1.img);
   test1 = "./" + test1;
   let tempcard = card1;
   tempcard.img = test1;
