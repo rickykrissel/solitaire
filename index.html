@@ -3,8 +3,13 @@
   <head>
     <title>Solitaire</title>
   </head>
-  <body id ="bodyid"style="background-image: url(solitaireback.webp);background-repeat: no-repeat;background-size: cover;">
+  <body id ="bodyid"style="background-image: url(solitaireback.webp);background-repeat: no-repeat;background-size: cover; width: 100%;
+  height: 100vh">
     <style>
+      .gamecomponents{
+        width: 400px;
+        height: 100px;
+      }
       .final_stacks{
         display:inline-flex;
         position:fixed;
@@ -127,7 +132,7 @@
         font-weight: bold;
       }
     </style>
-
+<div class = "gamecomponents">
     <div class = "final_stacks">
       <div id = "clubs_stack">
         <img id = "clubs_stackimg"ondrop = "drop(event)" ondragover= "dragoverHandler(event)" src = "clubsicon.jpg">
@@ -147,7 +152,6 @@
     </button>
     
 
-    </map>
     <div id = "wastepilediv">
       <img id = "wastepile">
     </div>
@@ -177,7 +181,7 @@
         
       </div>
     </div>
-    
+</div>
     
 
 

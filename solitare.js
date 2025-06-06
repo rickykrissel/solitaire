@@ -279,15 +279,12 @@ function drop(even){
   const fetchData = even.dataTransfer.getData("img");
   
   const element = even.target;
-  console.log(element);
   let card1 = imgtocard(fetchData);
 
   let test1= card1.img.substring(card1.img.indexOf("/P")+1,card1.img.length);
-  console.log('this is card1.img: ' + card1.img);
   test1 = "./" + test1;
   let tempcard = card1;
   tempcard.img = test1;
-  console.log(" this is tempcard: "+tempcard);
 
   let stacksuit;
   if(element.src.indexOf("icon")!=-1){
@@ -296,11 +293,9 @@ function drop(even){
   else{
     stacksuit = element.src.substring(element.src.lastIndexOf("_")+1,element.src.lastIndexOf("."));
   }
-  console.log(stacksuit);
-  console.log(canDeposit(card1,stacksuit));
+
   if(canDeposit(card1,stacksuit)){
     element.src = fetchData;
-    console.log("this is element.src"+element.src);
     if (stacksuit == "diamonds"){
       foundationdiamonds.push(card1);
       for (let i =0;i<deckofcards.length;i++){
@@ -383,7 +378,6 @@ function dropstack(even, pilenum){
   const fetchData = even.dataTransfer.getData("img");
   const fetchData2 = even.dataTransfer.getData("text");
   let isnull = false;
-  console.log("this is eventarid: "+ even.target.id);
   if (even.target.id == "nullpile"){
     isnull = true;
   }
@@ -394,7 +388,6 @@ function dropstack(even, pilenum){
     let originalpile = Number(fetchData2.substring(fetchData2.indexOf(" ")+1,fetchData2.length));
     if (piles[originalpile-1][topstackindex].value == 13 && isnull){
       isnullandking = true;
-      console.log("nullandkingtrue");
     }
     if (isnullandking){
       
@@ -411,7 +404,6 @@ function dropstack(even, pilenum){
         piles[pilenum-1].unshift(piles[originalpile-1][i]);
         piles[originalpile-1].splice(i,1);
       }
-      console.log("topstackindex: "+topstackindex+" pilenumber: "+originalpile);
       rendercardstart();
 
     }
@@ -431,7 +423,6 @@ function dropstack(even, pilenum){
         piles[pilenum-1].unshift(piles[originalpile-1][i]);
         piles[originalpile-1].splice(i,1);
       }
-      console.log("topstackindex: "+topstackindex+" pilenumber: "+originalpile);
       rendercardstart();
     }
     
@@ -449,10 +440,8 @@ function dropstack(even, pilenum){
         }
     }
     bottomcard.pile = pilenum;
-    console.log("topcard.suit: " + topcard.suit);
     if (topcard.value == 13 && isnull){
       isnullandking = true;
-      console.log("nullandkingtrue");
     }
     
     if (canStack(topcard,bottomcard) || isnullandking){
@@ -467,7 +456,7 @@ function dropstack(even, pilenum){
       if(!isnullandking){
         piles[pilenum-1][0].face = "up";
       }
-      console.log(topcard.pile);
+
       piles[pilenum-1].unshift(topcard);
       if (originalpile == "stock"){
         wastepile.pop();
@@ -481,7 +470,6 @@ function dropstack(even, pilenum){
       else{
         piles[originalpile-1].shift();
       }
-      console.log("originalpile: "+ originalpile);
       rendercardstart();
     }
     
@@ -510,7 +498,6 @@ function dragstack(even){
   }
   let cardstackstr = "" + indexoftopofstack+" "+topofstack.pile;
   even.dataTransfer.setData("text", cardstackstr);
-  console.log(cardstackstr);
 }
 
 
